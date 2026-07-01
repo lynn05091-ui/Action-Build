@@ -1,0 +1,78 @@
+name: Build ReSukiSU Manager
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-resukisu-manager-susfs22
+    paths:
+      - ".github/workflows/Build ReSukiSU Manager.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout patched ReSukiSU
+        uses: actions/checkout@v7
+        with:
+          repository: lynn05091-ui/ReSukiSU
+          ref: manager-susfs-2.2
+          path: ReSukiSU
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager \
+            "platforms;android-37" \
+            "build-tools;36.1.0" \
+            "ndk;29.0.14206865"
+
+      - name: Generate temporary signing key
+        working-directory: ReSukiSU/manager
+        run: |
+          keytool -genkeypair \
+            -alias resukisu-custom \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass android \
+            -keypass android \
+            -dname "CN=ReSukiSU Custom" \
+            -storetype JKS \
+            -keystore resukisu-custom.jks
+
+          {
+            echo "KEYSTORE_FILE=resukisu-custom.jks"
+            echo "KEYSTORE_PASSWORD=android"
+            echo "KEY_ALIAS=resukisu-custom"
+            echo "KEY_PASSWORD=android"
+          } >> gradle.properties
+
+      - name: Build release manager
+        working-directory: ReSukiSU/manager
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleRelease -Pcommit="$(git rev-parse HEAD)"
+
+      - name: List APK outputs
+        run: find ReSukiSU/manager/app/build/outputs/apk -type f -name "*.apk" -print -exec sha256sum {} \;
+
+      - name: Upload APK outputs
+        uses: actions/upload-artifact@v7
+        with:
+          name: ReSukiSU-manager-susfs-2.2.0
+          path: ReSukiSU/manager/app/build/outputs/apk/release/*.apk
