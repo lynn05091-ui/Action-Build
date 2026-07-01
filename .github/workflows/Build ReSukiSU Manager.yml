@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: lynn05091-ui/ReSukiSU
-          ref: manager-susfs-2.2
+          ref: 1c1752dbd01f1067feb1240ee93d0729349bf806
           path: ReSukiSU
           fetch-depth: 0
 
