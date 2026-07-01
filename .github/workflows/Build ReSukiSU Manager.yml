@@ -37,9 +37,10 @@ jobs:
         run: |
           yes | sdkmanager --licenses >/dev/null
           sdkmanager \
-            "platforms;android-36" \
+            "platforms;android-37.0" \
             "build-tools;36.1.0" \
             "ndk;29.0.14206865"
+          ln -s "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
 
       - name: Generate temporary signing key
         working-directory: ReSukiSU/manager
