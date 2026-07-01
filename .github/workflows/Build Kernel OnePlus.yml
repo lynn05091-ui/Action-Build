@@ -830,6 +830,10 @@ jobs:
           fi
 
           KSU_VERSION=$(expr $(git rev-list --count "$MANAGER_BRANCH" 2>/dev/null || echo 13000) + 37185)
+          if [[ "$MANUAL_HASH" == "0ca744a88835144c58d8256ebb32c279edabfcde" ]]; then
+            KSU_VERSION=40796
+            sed -i 's|^KSU_VERSION[[:space:]]*:=[[:space:]].*|KSU_VERSION     := 40796|' kernel/Makefile
+          fi
           echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
 
           echo "::group::最终 Makefile 中版本信息及部分调试结果预览"
