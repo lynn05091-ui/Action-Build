@@ -1216,6 +1216,7 @@ jobs:
 
           # SukiSU Ultra配置
           set_config "CONFIG_KSU=y"
+          set_config "CONFIG_KSU_MULTI_MANAGER_SUPPORT=y"
 
           # KPM配置
           if [ "${{ github.event.inputs.KPM }}" = "KPM" ] || [ "${{ github.event.inputs.KPM }}" = "N/A" ]; then
@@ -1539,6 +1540,8 @@ jobs:
             LLVM=1
             ARCH=arm64
             CROSS_COMPILE=aarch64-linux-gnu-
+            KSU_EXPECTED_SIZE=0x2dd
+            KSU_EXPECTED_HASH=ac3ea66d4ef50e33a8e55a0b4ef7b6a15ab05274c20a83f5955a873f59ad275e
             CC="$CC_WRAPPER"
             HOSTCC="$CC_WRAPPER"
             HOSTLD=ld.lld
