@@ -978,7 +978,9 @@ jobs:
             fi
             if [ "$SUBLEVEL" -ge "123" ]; then
               echo "Reverting memory.c Android 13 5.15 Fake Patch"
-              sed -i '/#ifdef CONFIG_KSU_SUSFS_SUS_MAP/i #include <linux/swap_slots.h>' ./mm/memory.c
+              if ! grep -q '^#include <linux/swap_slots.h>' ./mm/memory.c && grep -q 'swap_slot_cache_enabled' ./mm/memory.c; then
+                sed -i '/^#include <linux\/swap.h>/a #include <linux/swap_slots.h>' ./mm/memory.c
+              fi
             fi
             if [ "$SUBLEVEL" -ge "197" ]; then
               echo "Reverting namespace.c Android 13 5.15 Fake Patch"
