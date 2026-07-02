@@ -966,6 +966,10 @@ jobs:
             echo "正在打susfs补丁"
             patch -p1 < 50_add_susfs_in_gki-${{ env.KANDROID_VERSION }}-${{ env.KERNEL_VERSION }}.patch || true
             echo "susfs_patch完成"
+            if [ -f include/linux/susfs.h ]; then
+              sed -i 's/^#define SUSFS_VERSION "2\.2\.0"/#define SUSFS_VERSION "2.1.0"/' include/linux/susfs.h
+              grep -n '^#define SUSFS_VERSION' include/linux/susfs.h
+            fi
           fi
           source $REJ_CHECKER
           check_rejects .
