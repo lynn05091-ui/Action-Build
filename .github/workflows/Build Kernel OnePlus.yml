@@ -1540,8 +1540,8 @@ jobs:
             LLVM=1
             ARCH=arm64
             CROSS_COMPILE=aarch64-linux-gnu-
-            KSU_EXPECTED_SIZE=0x2dd
-            KSU_EXPECTED_HASH=ac3ea66d4ef50e33a8e55a0b4ef7b6a15ab05274c20a83f5955a873f59ad275e
+            KSU_EXPECTED_SIZE=0x2db
+            KSU_EXPECTED_HASH=360706edad6c74d5713d2337343c334402c7d1a12ab29625fca5b0ea1fc9974a
             CC="$CC_WRAPPER"
             HOSTCC="$CC_WRAPPER"
             HOSTLD=ld.lld
